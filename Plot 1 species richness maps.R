@@ -9,6 +9,7 @@ library(grid)
 library(gridExtra)
 library(lattice)
 library(matrixStats)
+library(tidyverse)
 
 #-#-# Set filepaths #-#-#
 matrixpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Data/BL_matrixes/"
@@ -33,7 +34,7 @@ GetSR <- lapply(All_matrixes,function(s){
   ## Read the data in
   One_matrix <- get(load(s))
   
-  ## Subset by trigger species 
+  ## Subset by trigger species if needed
   # One_matrix_trigger <- names(One_matrix)[(names(One_matrix) %in% Trigger)] # Check which trigger species were modelled
   # Trigger.List <- as.vector(c("x","y",One_matrix_trigger)) # Make a list of the modelled trigger species
   # One_matrix <- One_matrix[, Trigger.List]
@@ -53,10 +54,10 @@ write.csv(SR_matrix, file = paste0(matrixpath, "Species_richness_all_TSS.csv"))
 
 #-#-# Read matrixes back in for plotting #-#-#
 SR_data <- read.csv(paste0(matrixpath, "Species_richness_all_TSS.csv"))
+Coordinates <- read.csv(paste0(datapath, "terrestrial_coords.csv"))
+head(Coordinates)
+SR_data <- merge(Coordinates, SR_data, by = c("x", "y"), all.x = T)
 head(SR_data)
-levelplot(GAM_baseline_TSS ~ x*y, data = SR_data)
-
-plot(GAM_baseline_TSS~RF_baseline_TSS,data=SR_data)
 
 ## Baseline projections
 Base <- SR_data[c("x","y","GAM_baseline_TSS","GBM_baseline_TSS","GLM_baseline_TSS")] # ,"RF_baseline_TSS"
@@ -87,8 +88,37 @@ Future_rcp85 <- SR_data[c("x","y","GAM_CCSM4_rcp85_50_TSS","GAM_GFDLCM3_rcp85_50
 Future_rcp85$Sd <- rowSds(as.matrix(Future_rcp85[3:ncol(Future_rcp85)]))
 head(Future_rcp85)
 
+#-#-# Plot the data #-#-#
+GAM_baseline_TSS <- as.data.frame(table(Base$GAM_baseline_TSS))
+colnames(GAM_baseline_TSS) <- c("Species_richness", "GAM_baseline_TSS")
+head(GAM_baseline_TSS)
+GLM_baseline_TSS <- as.data.frame(table(Base$GLM_baseline_TSS))
+colnames(GLM_baseline_TSS) <- c("Species_richness", "GLM_baseline_TSS")
+head(GLM_baseline_TSS)
+GBM_baseline_TSS <- as.data.frame(table(Base$GBM_baseline_TSS))
+colnames(GBM_baseline_TSS) <- c("Species_richness", "GBM_baseline_TSS")
+head(GBM_baseline_TSS)
 
+BaseList <- c(GAM_baseline_TSS, GLM_baseline_TSS, GBM_baseline_TSS)
 
+Base_matrix <- Reduce(function(...) merge(..., by = "Species_richness", all = T), BaseList)
+head(Base_matrix)
+
+All <- merge(GAM_baseline_TSS, GLM_baseline_TSS, by = "Species_richness", all.x = T, all.y =T)
+All <- merge(All, GBM_baseline_TSS, by = "Species_richness", all.x = T, all.y =T)
+head(All)
+  
+ggplot(All, aes(x=Species_richness, y=GAM_baseline_TSS)) +
+  geom_line(group = 1, colour = "red") +
+  geom_line(aes(x=Species_richness, y=GBM_baseline_TSS), group = 1, colour = "blue") +
+  geom_line(aes(x=Species_richness, y=GLM_baseline_TSS), group = 1, colour = "green") +
+  scale_x_discrete(breaks = c("100","200","300","400","500","600","700","800")) 
+  
+  scale_x_discrete(breaks = levels(All$Species_richness)[floor(seq(1, 
+                                                     nlevels(All$Species_richness), 
+                                                     length.out = 10))]) 
+
+plot(GAM_baseline_TSS ~ Species_richness, data = All)
 levelplot(Sd~x*y,data=Future_rcp85)
 levelplot(GAM_baseline_TSS~x*y,data=Base)
 levelplot(GLM_baseline_TSS~x*y,data=Base)
