@@ -17,7 +17,7 @@ datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_
 
 
 #-#-# Proccess the input data - summarizing species matrixes into SR dataframes #-#-#
-All_matrixes <- list.files(matrixpath)
+All_matrixes <- list.files(matrixpath, pattern = "_TSS.RData")
 
 
 #-#-# Get the trigger species list if subsetting by trigger species #-#-#
@@ -32,7 +32,7 @@ GetSR <- lapply(All_matrixes,function(s){
   print(Name)
   
   ## Read the data in
-  One_matrix <- get(load(s))
+  One_matrix <- get(load(paste0(matrixpath,s)))
   
   ## Subset by trigger species if needed
   # One_matrix_trigger <- names(One_matrix)[(names(One_matrix) %in% Trigger)] # Check which trigger species were modelled
@@ -60,7 +60,7 @@ SR_data <- merge(Coordinates, SR_data, by = c("x", "y"), all.x = T)
 head(SR_data)
 
 ## Baseline projections
-Base <- SR_data[c("x","y","GAM_baseline_TSS","GBM_baseline_TSS","GLM_baseline_TSS")] # ,"RF_baseline_TSS"
+Base <- SR_data[c("x","y","GAM_baseline_TSS", "GBM_baseline_TSS", "GLM_baseline_TSS", "RF_baseline_TSS")]  
 Base$Sd <- rowSds(as.matrix(Base[3:ncol(Base)]))
 head(Base)
 
@@ -68,23 +68,27 @@ levelplot(Sd~x*y,data=Base)
 levelplot(GAM_baseline_TSS~x*y,data=Base)
 levelplot(GLM_baseline_TSS~x*y,data=Base)
 levelplot(GBM_baseline_TSS~x*y,data=Base)
+levelplot(RF_baseline_TSS~x*y,data=Base)
 
 ## Future projections
-Future_rcp26 <- SR_data[c("x","y","GAM_CCSM4_rcp26_50_TSS","GAM_GFDLCM3_rcp26_50_TSS","GAM_HadGEM2ES_rcp26_50_TSS",
-                          "GBM_CCSM4_rcp26_50_TSS","GBM_GFDLCM3_rcp26_50_TSS","GBM_HadGEM2ES_rcp26_50_TSS",
-                          "GLM_CCSM4_rcp26_50_TSS","GLM_GFDLCM3_rcp26_50_TSS","GLM_HadGEM2ES_rcp26_50_TSS")] # "RF_CCSM4_rcp26_50_TSS","RF_GFDLCM3_rcp26_50_TSS","RF_HadGEM2ES_rcp26_50_TSS"
+Future_rcp26 <- SR_data[c("x", "y", "GAM_CCSM4_rcp26_50_TSS", "GAM_GFDLCM3_rcp26_50_TSS", "GAM_HadGEM2ES_rcp26_50_TSS",
+                          "GBM_CCSM4_rcp26_50_TSS", "GBM_GFDLCM3_rcp26_50_TSS", "GBM_HadGEM2ES_rcp26_50_TSS",
+                          "GLM_CCSM4_rcp26_50_TSS", "GLM_GFDLCM3_rcp26_50_TSS", "GLM_HadGEM2ES_rcp26_50_TSS",
+                          "RF_CCSM4_rcp26_50_TSS", "RF_GFDLCM3_rcp26_50_TSS", "RF_HadGEM2ES_rcp26_50_TSS")] 
 Future_rcp26$Sd <- rowSds(as.matrix(Future_rcp26[3:ncol(Future_rcp26)]))
 head(Future_rcp26)
 
-Future_rcp45 <- SR_data[c("x","y","GAM_CCSM4_rcp45_50_TSS","GAM_GFDLCM3_rcp45_50_TSS","GAM_HadGEM2ES_rcp45_50_TSS",
-                          "GBM_CCSM4_rcp45_50_TSS","GBM_GFDLCM3_rcp45_50_TSS","GBM_HadGEM2ES_rcp45_50_TSS",
-                          "GLM_CCSM4_rcp45_50_TSS","GLM_GFDLCM3_rcp45_50_TSS","GLM_HadGEM2ES_rcp45_50_TSS")] # "RF_CCSM4_rcp26_50_TSS","RF_GFDLCM3_rcp26_50_TSS","RF_HadGEM2ES_rcp26_50_TSS"
+Future_rcp45 <- SR_data[c("x", "y", "GAM_CCSM4_rcp45_50_TSS", "GAM_GFDLCM3_rcp45_50_TSS", "GAM_HadGEM2ES_rcp45_50_TSS",
+                          "GBM_CCSM4_rcp45_50_TSS", "GBM_GFDLCM3_rcp45_50_TSS", "GBM_HadGEM2ES_rcp45_50_TSS",
+                          "GLM_CCSM4_rcp45_50_TSS", "GLM_GFDLCM3_rcp45_50_TSS", "GLM_HadGEM2ES_rcp45_50_TSS",
+                          "RF_CCSM4_rcp26_50_TSS", "RF_GFDLCM3_rcp26_50_TSS", "RF_HadGEM2ES_rcp26_50_TSS")] # "RF_CCSM4_rcp26_50_TSS","RF_GFDLCM3_rcp26_50_TSS","RF_HadGEM2ES_rcp26_50_TSS"
 Future_rcp45$Sd <- rowSds(as.matrix(Future_rcp45[3:ncol(Future_rcp45)]))
 head(Future_rcp45)
 
-Future_rcp85 <- SR_data[c("x","y","GAM_CCSM4_rcp85_50_TSS","GAM_GFDLCM3_rcp85_50_TSS","GAM_HadGEM2ES_rcp85_50_TSS",
-                          "GBM_CCSM4_rcp85_50_TSS","GBM_GFDLCM3_rcp85_50_TSS","GBM_HadGEM2ES_rcp85_50_TSS",
-                          "GLM_CCSM4_rcp85_50_TSS","GLM_GFDLCM3_rcp85_50_TSS","GLM_HadGEM2ES_rcp85_50_TSS")] # "RF_CCSM4_rcp26_50_TSS","RF_GFDLCM3_rcp26_50_TSS","RF_HadGEM2ES_rcp26_50_TSS"
+Future_rcp85 <- SR_data[c("x", "y", "GAM_CCSM4_rcp85_50_TSS", "GAM_GFDLCM3_rcp85_50_TSS", "GAM_HadGEM2ES_rcp85_50_TSS",
+                          "GBM_CCSM4_rcp85_50_TSS", "GBM_GFDLCM3_rcp85_50_TSS", "GBM_HadGEM2ES_rcp85_50_TSS",
+                          "GLM_CCSM4_rcp85_50_TSS", "GLM_GFDLCM3_rcp85_50_TSS", "GLM_HadGEM2ES_rcp85_50_TSS",
+                          "RF_CCSM4_rcp26_50_TSS", "RF_GFDLCM3_rcp26_50_TSS", "RF_HadGEM2ES_rcp26_50_TSS")] # "RF_CCSM4_rcp26_50_TSS","RF_GFDLCM3_rcp26_50_TSS","RF_HadGEM2ES_rcp26_50_TSS"
 Future_rcp85$Sd <- rowSds(as.matrix(Future_rcp85[3:ncol(Future_rcp85)]))
 head(Future_rcp85)
 
@@ -98,31 +102,29 @@ head(GLM_baseline_TSS)
 GBM_baseline_TSS <- as.data.frame(table(Base$GBM_baseline_TSS))
 colnames(GBM_baseline_TSS) <- c("Species_richness", "GBM_baseline_TSS")
 head(GBM_baseline_TSS)
+RF_baseline_TSS <- as.data.frame(table(Base$RF_baseline_TSS))
+colnames(RF_baseline_TSS) <- c("Species_richness", "RF_baseline_TSS")
+head(RF_baseline_TSS)
 
-BaseList <- c(GAM_baseline_TSS, GLM_baseline_TSS, GBM_baseline_TSS)
 
-Base_matrix <- Reduce(function(...) merge(..., by = "Species_richness", all = T), BaseList)
-head(Base_matrix)
-
+## Combine frames keeping all SR values
+BaseList <- c(GAM_baseline_TSS, GLM_baseline_TSS, GBM_baseline_TSS, RF_baseline_TSS)
 All <- merge(GAM_baseline_TSS, GLM_baseline_TSS, by = "Species_richness", all.x = T, all.y =T)
 All <- merge(All, GBM_baseline_TSS, by = "Species_richness", all.x = T, all.y =T)
+All <- merge(All, RF_baseline_TSS, by = "Species_richness", all.x = T, all.y =T)
 head(All)
   
-ggplot(All, aes(x=Species_richness, y=GAM_baseline_TSS)) +
+ggplot(All, aes(x = Species_richness, y = GAM_baseline_TSS)) +
   geom_line(group = 1, colour = "red") +
   geom_line(aes(x=Species_richness, y=GBM_baseline_TSS), group = 1, colour = "blue") +
   geom_line(aes(x=Species_richness, y=GLM_baseline_TSS), group = 1, colour = "green") +
-  scale_x_discrete(breaks = c("100","200","300","400","500","600","700","800")) 
+  geom_line(aes(x=Species_richness, y=RF_baseline_TSS), group = 1, colour = "black") +
+  scale_x_discrete(breaks = c("100","200","300","400","500","600","702","800"),
+                   labels = c("100","200","300","400","500","600","700","800"))
   
-  scale_x_discrete(breaks = levels(All$Species_richness)[floor(seq(1, 
-                                                     nlevels(All$Species_richness), 
-                                                     length.out = 10))]) 
 
-plot(GAM_baseline_TSS ~ Species_richness, data = All)
-levelplot(Sd~x*y,data=Future_rcp85)
-levelplot(GAM_baseline_TSS~x*y,data=Base)
-levelplot(GLM_baseline_TSS~x*y,data=Base)
-levelplot(GBM_baseline_TSS~x*y,data=Base)
+
+
 
 #-#-# Plot the data #-#-#
 colPal <- rev(brewer.pal(11,"Spectral"))[-c(3)]
