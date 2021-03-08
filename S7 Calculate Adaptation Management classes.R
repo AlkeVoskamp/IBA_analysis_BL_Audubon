@@ -228,7 +228,7 @@ Calc_manag <- lapply(All_scenarioes, function(m){
 #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
 ## These are needed to plot the uncertainty around the allocated management class based on SDM and GCM types
 #-#-# Summarize the Mgt class information for ensembles #-#-# 
-Mgt_classes <- intersect(list.files(outpath, pattern = "IBA_all"), list.files(outpath, pattern = "_MaxKap.csv"))
+Mgt_classes <- intersect(list.files(outpath, pattern = "IBA_trigger"), list.files(outpath, pattern = "_MaxKap.csv"))
 #Mgt_classes <- Mgt_classes[4:39]
 
 summarized_outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_management_classes_summarized/"
@@ -306,7 +306,7 @@ Summarize <- lapply(RCPs, function(r){
   Final_count<- do.call(rbind,Variance_mgt)
   Combined_scenario <- cbind(EnsembleFile,Final_count)
   
-  write.csv(Combined_scenario,paste0(summarized_outpath, "Mgt_classes_summarized_","all_",RCP,"_MaxKap.csv"))
+  write.csv(Combined_scenario,paste0(summarized_outpath, "Mgt_classes_summarized_","trigger_",RCP,"_MaxKap.csv"))
   
 })
 
