@@ -33,23 +33,16 @@ g_legend<-function(a.gplot){
 
 #-#-# Set the filepaths #-#-#
 File_path <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_management_classes/"
-Col_em_file <- list.files(File_path,pattern = "all_species_changes_Ensemble_rcp45_2050_MaxKap")
+Col_em_file <- list.files(File_path,pattern = "trigger_species_changes_Ensemble_rcp45_2050_MaxKap")
 
 
 #-#-# Load the plot data #-#-#
 Sc_plot_data <- read.csv(paste0(File_path, Col_em_file))
 Sc_plot_data$propCol <- log(Sc_plot_data$propCol)
 Sc_plot_data$propEm <- log(Sc_plot_data$propEm)
+#Sc_plot_data$propCol <- Sc_plot_data$propCol
+#Sc_plot_data$propEm <- Sc_plot_data$propEm
 Sc_plot_data <- na.omit(Sc_plot_data)
-
-#-#-# Change name for management categories #-#-#
-# Sc_plot_data$Category <- 0
-# Sc_plot_data$Category[Sc_plot_data$ClassE == 1] <- "Increasing diversification"
-# Sc_plot_data$Category[Sc_plot_data$ClassD == 1] <- "Increasing specialization"
-# Sc_plot_data$Category[Sc_plot_data$ClassC == 1] <- "High turnover"
-# Sc_plot_data$Category[Sc_plot_data$ClassB == 1] <- "Increasing value"
-# Sc_plot_data$Category[Sc_plot_data$ClassA == 1] <- "High persistence"
-# head(Sc_plot_data)
 
 
 #-#-# Set the colour scheme #-#-#
@@ -95,12 +88,12 @@ plot(CombPlot)
 
 #-#-# Save the result plots #-#-#
 setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/")
-ggsave("Scatterplot_all_cat_RCP_45_50_MaxKap.jpeg",CombPlot,width=6, height=4, unit="in", dpi=600, bg="transparent")
+ggsave("Scatterplot_trigger_cat_RCP_45_50_MaxKap.jpeg",CombPlot,width=6, height=4, unit="in", dpi=600, bg="transparent")
 
 
 #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
 #-#-# Proportion per country plot #-#-#
-mgt <- read.csv(paste0(File_path,"Management_classes_IBA_trigger_species_changes_Ensemble_rcp45_2050_TSS.csv"))
+mgt <- read.csv(paste0(File_path,"Management_classes_IBA_trigger_species_changes_Ensemble_rcp45_2050_MaxKap.csv"))
 
 mgt$Category <- 0
 mgt$Category[mgt$ClassE == 1] <- "Increasing diversification"
@@ -159,5 +152,5 @@ plot(CountryMgt)
 
 setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/")
 #setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Spp/")
-ggsave("Mgt proportion per country trigger RCP 45 TSS.jpeg",CountryMgt,width=14, height=6, unit="in", dpi=600, bg="transparent")
+ggsave("Mgt proportion per country trigger RCP 45 MazKap.jpeg",CountryMgt,width=14, height=6, unit="in", dpi=600, bg="transparent")
 
