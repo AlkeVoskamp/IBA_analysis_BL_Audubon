@@ -13,7 +13,7 @@ rm(list=ls(all=TRUE))
 matrix_path <- "/home/avoskamp/BirdLife/Projected distributions/Revision/Matrixes/"
 data_path <- "/home/avoskamp/BirdLife/"
 outpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/IBA_turnover_lists/"
-splistpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/"
+splistpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/"
 
 
 #-#-# Get the species lists #-#-#
@@ -64,6 +64,7 @@ Thres_type <- lapply(Thres, function(t){
       
       print(s)
       SDM <- s
+      SDM_name <- paste0("_", SDM)
       
       ##Load the baseline matrix
       base_name <- paste0(SDM, "_baseline_",Thres,".RData")
@@ -85,13 +86,13 @@ Thres_type <- lapply(Thres, function(t){
       splistbase <- splistbase[, Base.List]
       
       ## Subset by trigger species 
-      Trigger_model <- lapply(Trigger, function(x){
-        Trigger_name <- paste0(x, "_", SDM)
-        return(Trigger_name)})
-      Trigger_model <- do.call(rbind, Trigger_model)
-      Trigger.Mods <- names(splistbase)[(names(splistbase) %in% Trigger_model)] # Check which trigger species were modelled
-      Trigger.List <- as.vector(c("x","y",Trigger.Mods)) # Make a list of the modelled trigger species
-      splistbase <- splistbase[, Trigger.List]
+      # Trigger_model <- lapply(Trigger, function(x){
+      #   Trigger_name <- paste0(x, "_", SDM)
+      #   return(Trigger_name)})
+      # Trigger_model <- do.call(rbind, Trigger_model)
+      # Trigger.Mods <- names(splistbase)[(names(splistbase) %in% Trigger_model)] # Check which trigger species were modelled
+      # Trigger.List <- as.vector(c("x","y",Trigger.Mods)) # Make a list of the modelled trigger species
+      # splistbase <- splistbase[, Trigger.List]
       splistbase[is.na(splistbase)] <- 0
       
       ## Loop through the different GCMs
@@ -103,8 +104,8 @@ Thres_type <- lapply(Thres, function(t){
         splistfut <- splistfut[, Base.List]
         
         ## Subset by trigger species
-        splistfut <- splistfut[, Trigger.List]
-        splistfut[is.na(splistfut)] <- 0
+        # splistfut <- splistfut[, Trigger.List]
+        # splistfut[is.na(splistfut)] <- 0
         
         Species_moving <- lapply(numberlist,function(x){
         print(x)
@@ -137,7 +138,7 @@ Thres_type <- lapply(Thres, function(t){
         }) # GCM close
 
       GCM_scenario <- as.data.frame(do.call(rbind, Species_moving))
-      write.csv(GCM_scenario,paste0(outpath,"IBA_trigger_species_turnover_",SDM,"_",GCM,"_",RCP,"_2050_",Thres,".csv")) # change here
+      write.csv(GCM_scenario,paste0(outpath,"IBA_all_species_turnover_",SDM,"_",GCM,"_",RCP,"_2050_",Thres,".csv")) # change here
 
       }) # SDM close
     }) # RCP close
