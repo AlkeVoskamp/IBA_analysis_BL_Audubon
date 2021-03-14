@@ -1,21 +1,26 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 #            Calculate bearing between range centroids              #
 #               Current and future range centroids                  #
-#                 Climate change rcp26 and rcp85                    #
 #                          November 2017                            #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
+
 rm(list=ls())
 
+
+#-#-# Load libraries #-#-#
 library(geosphere)
 library(circular)
 library(plyr)
 library(CircStats)
+library(sp)
 
-#-#-# Bearing between range centers #-#-#
+
+#-#-# Bearing between range centroids #-#-#
 #setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/Result files/")
 datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents/"
 outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Summarized_range centroids and extents/"
+
 
 #-#-# List files to extract mean coords per species #-#-#
 All_files <- list.files(datapath)
@@ -83,8 +88,10 @@ Species_type  <- lapply(Species, function(s){
 #-#-# Set filepaths #-#-#
 outpathII <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Bearings between range centroids/"
 
+
 #-#-# List output files summarized coordinates #-#-#
 Coordfiles <- list.files(outpath)
+
 
 #-#-# Extract bearings #-#-#
 Get_bearing <- lapply(Coordfiles, function(x){
@@ -113,8 +120,11 @@ Get_bearing <- lapply(Coordfiles, function(x){
   
       bear <- bearing(cur,fut)
       print(bear)
+      
+      distance <- spDistsN1(as.matrix(cur),as.matrix(fut),longlat = TRUE) 
+      print(distance)
   
-      alldata <- (c(name=name,bearing=bear))
+      alldata <- (c(name=name,bearing=bear,distance=distance))
       alldata <- as.data.frame(alldata)
       
       ##Add directions
@@ -142,7 +152,8 @@ Get_bearing <- lapply(Coordfiles, function(x){
 setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Bearings between range centroids/")
 All_sum_files <- list.files()
 
-CDdata <- read.csv(All_sum_files[1])
+## Set to the right file for manuscript info and supplements
+CDdata <- read.csv(All_sum_files[9])
 head(CDdata)
 
 Allsp <- nrow(CDdata)
@@ -157,7 +168,7 @@ PercNNW <- sum(CDdata$Direction == "NNW")/(Allsp/100)
 
 PercMovingNorth <- PercNNW + PercNNE
 PercMovingSouth <- PercSSW + PercSSE
-Allsp <- nrow(CDdata)
+
 NoMovingNorth <- sum(CDdata$Direction == "NNW") + sum(CDdata$Direction == "NNE")
 NoMovingSouth <- sum(CDdata$Direction == "SSW") + sum(CDdata$Direction == "SSE")
 PercMovingNorth
