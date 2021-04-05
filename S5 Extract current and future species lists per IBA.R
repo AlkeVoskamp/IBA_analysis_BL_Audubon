@@ -67,7 +67,7 @@ Thres_type <- lapply(Thres[1], function(t){
         SDM_name <- paste0("_", SDM)
         
         ## Get the current matrix
-        base_name <- paste0(SDM, "_baseline_TSS.RData")
+        base_name <- paste0(SDM, "_baseline_", Thres, ".RData")
         splistbase <- get(load(paste0(matrix_path, base_name)))
         basenames <- colnames(splistbase[3:ncol(splistbase)])
         basenames <- lapply(basenames, function(n){
@@ -101,7 +101,7 @@ Thres_type <- lapply(Thres[1], function(t){
             GCM <- g
             
             ## Get the future matrix
-            fut_name <- paste0(SDM,"_",GCM,"_rcp45_50_TSS.RData")
+            fut_name <- paste0(SDM,"_",GCM, "_", RCP, "_50_", Thres, ".RData")
             splistfut <- get(load(paste0(matrix_path,fut_name)))
             splistfut <- splistfut[, Base.List]
             

@@ -153,7 +153,7 @@ setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/D
 All_sum_files <- list.files()
 
 ## Set to the right file for manuscript info and supplements
-CDdata <- read.csv(All_sum_files[9])
+CDdata <- read.csv(All_sum_files[8])
 head(CDdata)
 
 Allsp <- nrow(CDdata)
@@ -177,4 +177,36 @@ Allsp
 NoMovingNorth
 NoMovingSouth
 
+mean(CDdata$distance)
+sd(CDdata$distance)
+
+
+#-#-# Extract change in range extent for manuscript #-#-#
+Extpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents/"
+
+## Select relevant files
+All_ex_files <- list.files(Extpath, pattern = "_rcp85_2050_MaxKap.csv")
+Sub_ex_files <- grep(All_ex_files, pattern = "all")
+Ex_files <- All_ex_files[c(Sub_ex_files)]
+
+## Summarize
+Sum <- lapply(Ex_files, function(x){
+  print(x)
+  data <- read.csv(paste0(Extpath, x))
+  data$PercChange <- data$FutureRangeKm2/(data$CurrentRangeKm2/100)
+  data <- data[c("SpName","PercChange")]
+  return(data)
+})
+
+DF_perc_change <- Reduce(function(...) merge(..., by = "SpName"),Sum)
+head(DF_perc_change)
+
+DF_perc_change$MeanPercChange <- rowMeans(DF_perc_change[2:ncol(DF_perc_change)], na.rm = T)
+DF_perc_change$MeanPercChangeSD <- rowMeans(DF_perc_change[2:(ncol(DF_perc_change)-1)], na.rm = T)
+DF_perc_change <- DF_perc_change[c("SpName", "MeanPercChange", "MeanPercChangeSD")]
+
+PercChange <- mean(na.omit(DF_perc_change$MeanPercChange))
+PercChangeSD <- sd(na.omit(DF_perc_change$MeanPercChange))
+PercChange - 100
+PercChangeSD
 

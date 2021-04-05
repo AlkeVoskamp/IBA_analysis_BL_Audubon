@@ -38,10 +38,8 @@ Col_em_file <- list.files(File_path,pattern = "trigger_species_changes_Ensemble_
 
 #-#-# Load the plot data #-#-#
 Sc_plot_data <- read.csv(paste0(File_path, Col_em_file))
-Sc_plot_data$propCol <- log(Sc_plot_data$propCol)
-Sc_plot_data$propEm <- log(Sc_plot_data$propEm)
-#Sc_plot_data$propCol <- Sc_plot_data$propCol
-#Sc_plot_data$propEm <- Sc_plot_data$propEm
+Sc_plot_data$propCol <- Sc_plot_data$propCol 
+Sc_plot_data$propEm <- Sc_plot_data$propEm
 Sc_plot_data <- na.omit(Sc_plot_data)
 
 
@@ -152,5 +150,5 @@ plot(CountryMgt)
 
 setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/")
 #setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Spp/")
-ggsave("Mgt proportion per country trigger RCP 45 MazKap.jpeg",CountryMgt,width=14, height=6, unit="in", dpi=600, bg="transparent")
+ggsave("Mgt proportion per country trigger RCP 45 MaxKap.jpeg",CountryMgt,width=14, height=6, unit="in", dpi=600, bg="transparent")
 

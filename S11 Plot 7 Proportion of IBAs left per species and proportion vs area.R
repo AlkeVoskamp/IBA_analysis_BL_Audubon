@@ -21,18 +21,20 @@ plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_
 
 
 #-#-# Get the data #-#-#
-Change_data <- read.csv(paste0(filepath,"Change_in_species_occurrence_trigger.csv"))
+## Set the threshold
+Threshold <- "MaxKap"
+Change_data <- read.csv(paste0(filepath,"Change_in_species_occurrence_trigger_habitat.csv"))
 OccChangeTable <- subset(Change_data, RCP == "rcp45") #Select rcp
-OccChangeTable <- subset(OccChangeTable, Thres == "MaxKap") #Select threshold
-
+OccChangeTable <- subset(OccChangeTable, Thres == Threshold) #Select threshold
+nrow(OccChangeTable)
 
 #-#-# Calculate change #-#-#
 OccChangeTable$PropLeft <- OccChangeTable$Both/(OccChangeTable$Current/100)
 head(OccChangeTable)
-
+nrow(OccChangeTable)
 
 #-#-# Extract numbers for result section #-#-#
-## Count species that remain in more than 50% of the IBAs they currently occur in 
+## Count species that remain in more than 50% of the IBAs they currently occur in
 fiftyPercLeft <- subset(OccChangeTable,PropLeft >= 50)
 nrow(fiftyPercLeft)
 nrow(fiftyPercLeft)/(nrow(OccChangeTable)/100)
@@ -101,14 +103,15 @@ head(AreaData)
 #-#-# Calculate the proportion of species left per KBA #-#-#
 #-#-# Set data paths #-#-#
 plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/"
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_occurrence _changes/"
+datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_species_changes_lists/"
 
 
 #-#-# Load IBA change data and calculate proportion of IBAs left #-#-#
-Plot_file <- read.csv(paste0(datapath,"IBA_trigger_species_changes_RCP45_2050_MaxKap.csv"))
+Plot_file <- read.csv(paste0(datapath,"IBA_all_species_changes_Ensemble_rcp45_2050_MaxKap_habitat.csv"))
 Plot_file <- Plot_file[c("IBA", "currentRich", "stablesp")]
 Plot_file <- Plot_file %>% group_by(IBA) %>% summarise_all("mean")
 Plot_file <- as.data.frame(Plot_file)
+
 Plot_file$PropLeft <- Plot_file$stablesp/(Plot_file$currentRich/100)
 
 
@@ -117,10 +120,6 @@ PlotData <- merge(AreaData,Plot_file,by=c("IBA"))
 PlotData$Area <- as.numeric(as.character(PlotData$Area))
 head(PlotData)
 str(PlotData)
-
-# plot(PropLeft~Area,data=PlotData)
-# abline(lm(PropLeft~Area,data=PlotData))
-# summary(lm(PropLeft~Area,data=PlotData))
 
 ## Scatterplot IBA area vs peoportion species remaining
 scatter <- ggplot(PlotData, aes(x=log(Area), y=PropLeft)) +
@@ -151,5 +150,34 @@ CombPlot <- arrangeGrob(IBApSp,scatter,
 plot(CombPlot)
 
 setwd(plotpath)
-ggsave("Fig 7 Percentage of IBAs left per species and IBA area RCP 45 trigger MaxKap.tiff",CombPlot,width=12, height=4, unit="in", dpi=300, bg="transparent")
+ggsave("Fig S19 Percentage of IBAs left per species and IBA area RCP 45 trigger MaxKap habitat.tiff",CombPlot,width=12, height=4, unit="in", dpi=300, bg="transparent")
+
+
+#-#-# Extract summary numbers per manuscript (from ensemble files generated in script S7) #-#-#
+summarypath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_species_changes_lists/"
+Plot_files <- list.files(summarypath, pattern = "_Ensemble")
+Plot_file <- read.csv(paste0(summarypath,Plot_files[3]))
+head(Plot_file)
+nrow(Plot_file)
+
+Plot_file <- Plot_file[c("IBA", "currentRich", "stablesp")]
+Plot_file$PropLeft <- Plot_file$stablesp/(Plot_file$currentRich/100)
+head(Plot_file)
+
+## Number of IBAs that are projected to currently contain suitable habitat for trigger species
+Suit_file <- subset(Plot_file, currentRich > 0)
+nrow(Suit_file)
+nrow(subset(Plot_file, currentRich == 0))
+
+## IBAs retain xx% of their species
+PropLeft_file <- subset(Suit_file, PropLeft >= 90)
+nrow(PropLeft_file)
+
+nrow(PropLeft_file)/(nrow(Suit_file)/100)
+
+## Check correlation area IBA and proportion species remaining 
+Testdata <- PlotData[c("Area","PropLeft")]
+Testdata$LogArea <- log(Testdata$Area)
+cor <- cor.test(x = Testdata$LogArea, y = Testdata$PropLeft,  method = c("spearman"))
+cor
 
