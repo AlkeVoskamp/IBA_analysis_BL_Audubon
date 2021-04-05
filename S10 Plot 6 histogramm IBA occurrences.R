@@ -29,7 +29,7 @@ Trigger <- get(load(paste0(triggerpath,"IBA trigger species.Rdata")))
 
 
 #-#-# Set working directionary and get the files
-AllSpecies <- list.files(filepath)
+AllSpecies <- list.files(filepath, pattern = "habitat")
 
 
 #-#-# Lists to go through sites, SDMs and GCMs #-#-#
@@ -126,7 +126,7 @@ OccChangeTable$PercLostFrom <- OccChangeTable$Loss / (OccChangeTable$Current / 1
 
 OccChangeTable[13,]
 setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/") ## Check Inf and NAs
-write.csv(OccChangeTable,"Change_in_species_occurrence_trigger.csv")
+write.csv(OccChangeTable,"Change_in_species_occurrence_trigger_habitat.csv")
 
 
 #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
@@ -139,13 +139,16 @@ plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_
 
 
 #-#-# Get the data #-#-#
-Change_data <- read.csv(paste0(filepath,"Change_in_species_occurrence_trigger.csv"))
+Change_data <- read.csv(paste0(filepath,"Change_in_species_occurrence_trigger_habitat.csv"))
 
 
 #-#-# Make Plot tables #-#-#
+## Set the threshold
+Threshold <- "MaxKap" # "TSS" 
+
 ## RCP26
 OccChangeTable26 <- subset(Change_data, RCP == "rcp26") #Select rcp
-OccChangeTable26 <- subset(OccChangeTable26, Thres == "MaxKap") #Select threshold
+OccChangeTable26 <- subset(OccChangeTable26, Thres == Threshold) #Select threshold
 
 Current_summary <- OccChangeTable26 %>% # the names of the new data frame and the data frame to be summarised
   dplyr::summarise(mean_PL = mean(na.omit(Current)),  # calculates the mean of each group
@@ -186,7 +189,7 @@ PlotData26$ChangeCategory <- factor(PlotData26$ChangeCategory,levels = c("Curren
 
 ## RCP45
 OccChangeTable45 <- subset(Change_data, RCP == "rcp45") #Select rcp
-OccChangeTable45 <- subset(OccChangeTable45, Thres == "MaxKap") #Select threshold
+OccChangeTable45 <- subset(OccChangeTable45, Thres == Threshold) #Select threshold
 Current_summary <- OccChangeTable45 %>% # the names of the new data frame and the data frame to be summarised
   dplyr::summarise(mean_PL = mean(na.omit(Current)),  # calculates the mean of each group
             sd_PL = sd(na.omit(Current)), # calculates the standard deviation of each group
@@ -227,7 +230,7 @@ PlotData45$ChangeCategory <- factor(PlotData45$ChangeCategory,levels = c("2050",
 
 ## RCP85
 OccChangeTable85 <- subset(Change_data, RCP == "rcp85") #Select rcp
-OccChangeTable85 <- subset(OccChangeTable85, Thres == "MaxKap") #Select threshold
+OccChangeTable85 <- subset(OccChangeTable85, Thres == Threshold) #Select threshold
 Current_summary <- OccChangeTable85 %>% # the names of the new data frame and the data frame to be summarised
   dplyr::summarise(mean_PL = mean(na.omit(Current)),  # calculates the mean of each group
             sd_PL = sd(na.omit(Current)), # calculates the standard deviation of each group
@@ -290,7 +293,7 @@ plot(Combinedplot)
 #---#---#---#---#---#---# Second plot #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
 ## RCP26
 OccChangeTable26 <- subset(Change_data, RCP == "rcp26") #Select rcp
-OccChangeTable26 <- subset(OccChangeTable26, Thres == "MaxKap") #Select threshold
+OccChangeTable26 <- subset(OccChangeTable26, Thres == Threshold) #Select threshold
 OccChangeTable26$PercLeft <- OccChangeTable26$Future/(OccChangeTable26$Current/100)
 MeanChangeTab <- (OccChangeTable26[is.finite(OccChangeTable26$PercLeft), ])
 Mean_perc_left <- mean(MeanChangeTab$PercLeft)
@@ -301,7 +304,7 @@ PlotData26 <- as.data.frame(cbind(ChangeCategory,RCP,Mean_perc_left,Mean_perc_SD
 
 ## RCP45
 OccChangeTable45 <- subset(Change_data, RCP == "rcp45") #Select rcp
-OccChangeTable45 <- subset(OccChangeTable45, Thres == "MaxKap") #Select threshold
+OccChangeTable45 <- subset(OccChangeTable45, Thres == Threshold) #Select threshold
 OccChangeTable45$PercLeft <- OccChangeTable45$Future/(OccChangeTable45$Current/100)
 MeanChangeTab <- (OccChangeTable45[is.finite(OccChangeTable45$PercLeft), ])
 Mean_perc_left <- mean(MeanChangeTab$PercLeft)
@@ -310,9 +313,9 @@ RCP <- "RCP 4.5"
 ChangeCategory <- "2050"
 PlotData45 <- as.data.frame(cbind(ChangeCategory,RCP,Mean_perc_left,Mean_perc_SD))
 
-## RCP45
+## RCP85
 OccChangeTable85 <- subset(Change_data, RCP == "rcp85") #Select rcp
-OccChangeTable85 <- subset(OccChangeTable85, Thres == "MaxKap") #Select threshold
+OccChangeTable85 <- subset(OccChangeTable85, Thres == Threshold) #Select threshold
 OccChangeTable85$PercLeft <- OccChangeTable85$Future/(OccChangeTable85$Current/100)
 MeanChangeTab <- (OccChangeTable85[is.finite(OccChangeTable85$PercLeft), ])
 Mean_perc_left <- mean(MeanChangeTab$PercLeft)
@@ -359,4 +362,54 @@ CombBar <- arrangeGrob(Combinedplot,Countplot,
 plot(CombBar)
 
 setwd(plotpath)
-ggsave("Fig 6 Combined Barchart number of IBAs a species occurs in RCP 45 trigger MaxKap.tiff",CombBar,width=12, height=4, unit="in", dpi=300, bg="transparent")
+ggsave("Fig S18 Combined Barchart number of IBAs a species occurs in RCP 45 all MaxKap habitat.tiff",CombBar,width=12, height=4, unit="in", dpi=300, bg="transparent")
+
+
+#-#-# Extract number of species that retain xx% of the IBAs they currently occur #-#-#
+occ_path <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/"
+all_occ <- list.files(occ_path, pattern = "all")
+occ <- read.csv(paste0(occ_path,all_occ[1]))
+nrow(occ)
+
+## Get trigger species list
+triggerpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/"
+Trigger <- get(load(paste0(triggerpath,"IBA trigger species.Rdata")))
+
+## Set the threshold and rcp
+Threshold <-  "MaxKap" #"MaxKap"
+rcp <- "rcp85"
+
+## Select data
+OccChangeTable <- subset(occ, RCP == rcp) #Select rcp
+OccChangeTable <- subset(OccChangeTable, Thres == Threshold) #Select threshold
+head(OccChangeTable)
+nrow(OccChangeTable)
+
+OccChangeTable <- OccChangeTable[c("Species", "PercSame")]
+
+## Subset by trigger species
+SubTable <- lapply(Trigger, function(x){
+  print(x)
+  data <- subset(OccChangeTable, Species == x)
+  return(data)
+})
+
+SubOccChangeTable <- do.call(rbind, SubTable)
+head(SubOccChangeTable)
+nrow(SubOccChangeTable)
+
+FinalTable <- OccChangeTable ## Change here all species or trigger subset #SubOccChangeTable
+
+FiftyPerc <- subset(FinalTable,PercSame >= 50)
+nrow(FiftyPerc)
+nrow(FiftyPerc)/(nrow(FinalTable)/100)
+
+twentyfivePerc <- subset(FinalTable,PercSame >= 25)
+nrow(twentyfivePerc)
+nrow(twentyfivePerc)/(nrow(FinalTable)/100)
+
+FinalTable[is.na(FinalTable)] <- 0
+Lessthan20Perc <- subset(FinalTable,PercSame < 10 )
+nrow(Lessthan20Perc)
+nrow(Lessthan20Perc)/(nrow(FinalTable)/100)
+
