@@ -18,17 +18,6 @@ outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
 
 AllData <- list.files(predpath, pattern = "_GAM_")
 
-#"GAM_baseline" running
-#"GAM_CCSM4_rcp26_50" running    
-#"GAM_CCSM4_rcp45_50" running   
-#"GAM_CCSM4_rcp85_50" running
-#"GAM_GFDLCM3_rcp26_50" running   
-#"GAM_GFDLCM3_rcp45_50" running  
-#"GAM_GFDLCM3_rcp85_50" running
-#"GAM_HadGEM2ES_rcp26_50" running
-#"GAM_HadGEM2ES_rcp45_50" running
-#"GAM_HadGEM2ES_rcp85_50" running
-
 
 #-#-# Load the relevant columns of all species files #-#-#
 oneScenario <- lapply(AllData, function(x){
