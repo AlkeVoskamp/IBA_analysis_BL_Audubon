@@ -1,8 +1,9 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#       Changes in species occurrences across the       #
-#             IBA network South America                 #
-#            Percentage change per species              #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                       IBA analysis Script 10                      #
+#       Changes in species occurrences across the IBA network       #
+#                    Percentage change per species                  #
+#                           November 2020                           #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
 #-#-# Clear memory #-#-#
@@ -18,14 +19,15 @@ library(gridExtra)
 
 
 #-#-# Set fole paths #-#-#
-triggerpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/"
-splistpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/"
-filepath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBAs_suitable_per_species_trigger/"
+data_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+filepath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBAs_suitable_per_species_trigger/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Species_occurrence_changes/"
+
 
 #-#-# Get the trigger species list if subsetting by trigger species #-#-#
-Good_mods <- read.csv(paste0(splistpath, "SDMs with high AUC all species.csv"))
+Good_mods <- read.csv(paste0(data_path, "SDMs with high AUC all species.csv"))
 Good_mods <- as.vector(Good_mods$Species)
-Trigger <- get(load(paste0(triggerpath,"IBA trigger species.Rdata")))
+Trigger <- get(load(paste0(data_path,"IBA trigger species.Rdata")))
 
 
 #-#-# Set working directionary and get the files
@@ -37,7 +39,7 @@ RCP <- c("rcp26","rcp45","rcp85")
 Thres <- c("TSS","MaxKap")
 
 
-## Summarize the occurrence data 
+#-#-# Summarize the occurrence data #-#-#
 Summarize <- lapply(AllSpecies,function(n){
   OneSp <- get(load(paste0(filepath ,n)))
   Species <- paste0(strsplit(n,split="_")[[1]][1],"_",strsplit(n,split="_")[[1]][2])
@@ -112,30 +114,30 @@ head(OccChangeTable)
 nrow(OccChangeTable)
 str(OccChangeTable)
 
+
 #-#-# Add percentage changes per species #-#-#
 ## How many IBAs are new to the species
 OccChangeTable$New <- OccChangeTable$Future - OccChangeTable$Both
 OccChangeTable$Loss <- OccChangeTable$Current - OccChangeTable$Both
 head(OccChangeTable)
 
-## Add percentages
+
+#-#-# Add percentages #-#-#
 OccChangeTable$Change <- (OccChangeTable$Future - OccChangeTable$Current) / (OccChangeTable$Current /100)
 OccChangeTable$PercSame <- OccChangeTable$Both / (OccChangeTable$Current / 100)
 OccChangeTable$PercNewTo <- OccChangeTable$New / (OccChangeTable$Current / 100)
 OccChangeTable$PercLostFrom <- OccChangeTable$Loss / (OccChangeTable$Current / 100)
 
 OccChangeTable[13,]
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/") ## Check Inf and NAs
-write.csv(OccChangeTable,"Change_in_species_occurrence_trigger_habitat.csv")
+
+write.csv(OccChangeTable,paste0(outpath,"Change_in_species_occurrence_trigger_habitat.csv"))
 
 
-#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
-#-#-# Plot the data #-#-#
-
+#---#---#---#---#---#---#---#---#---# Plot the data #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
 
 #-#-# Set the file paths #-#-#
-filepath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/"
-plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/"
+filepath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Species_occurrence_changes/"
+plotpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/"
 
 
 #-#-# Get the data #-#-#
@@ -364,6 +366,8 @@ plot(CombBar)
 setwd(plotpath)
 ggsave("Fig S18 Combined Barchart number of IBAs a species occurs in RCP 45 all MaxKap habitat.tiff",CombBar,width=12, height=4, unit="in", dpi=300, bg="transparent")
 
+
+#---#---#---#---#---#---# Extract values for results section #---#---#---#---#---#---#---#---#---#---#---#---#
 
 #-#-# Extract number of species that retain xx% of the IBAs they currently occur #-#-#
 occ_path <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/"
