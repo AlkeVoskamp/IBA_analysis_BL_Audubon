@@ -51,7 +51,8 @@ GetSR <- lapply(All_matrixes,function(s){
   ## Read the data in
   One_matrix <- get(load(paste0(matrixpath,s)))
   
-  ## Subset to species with high performing models
+  ## Subset to species with high performing models  
+  ## (based on chosen SDM evaluation i.e. Boye, AUC, needs list of species with sufficient model performance)
   basenames <- colnames(One_matrix[3:ncol(One_matrix)])
   basenames <- lapply(basenames, function(n){
     name <- strsplit(n, split = SDM_name)[[1]][1]
