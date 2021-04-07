@@ -1,7 +1,8 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 4                      #
 #      Summarize the turnover vales for one threshold and RCP       #
 #              and calculate SD across all scenarioes               #
-#                           November 2020                           #
+#                            November 2020                          #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
@@ -17,9 +18,9 @@ library(matrixStats)
 
 
 #-#-# Set the data paths #-#-#
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/"
-TOpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_turnover_lists/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_turnover_lists_summarized/"
+TOpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_turnover_lists/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_turnover_lists_summarized/"
+
 
 #-#-# Get list of IBA names #-#-#
 IBAs <- read.csv(paste0(TOpath,"IBA_trigger_species_turnover_GAM_CCSM4_rcp45_2050_MaxKap.csv"))[2]
@@ -54,4 +55,4 @@ hist(IBAdata$SD)
 
 write.csv(IBAdata,paste0(outpath,"IBA_trigger_species_turnover_rcp45_MaxKap.csv"))
 
-#-#-# Plots are generated in QGIS based on the output files #-#-#
+#-#-# Maps for the paper were generated in QGIS based on the output files #-#-#
