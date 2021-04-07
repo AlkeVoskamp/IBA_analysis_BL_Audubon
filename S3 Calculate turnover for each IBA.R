@@ -1,8 +1,9 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#               Calculate species turnover per IBA            #
-#              based on current and future richness           #
-#                        September 2020                       #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 3                      #
+#                  Calculate species turnover per IBA               #
+#                 based on current and future richness              #
+#                            September 2020                         #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
 #-#-# Clear the memory #-#-#
@@ -10,14 +11,13 @@ rm(list=ls(all=TRUE))
 
 
 #-#-# Set working directories #-#-#
-matrix_path <- "/home/avoskamp/BirdLife/Projected distributions/Revision/Matrixes/"
-data_path <- "/home/avoskamp/BirdLife/"
-outpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/IBA_turnover_lists/"
-splistpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/"
+matrix_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+data_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_turnover_lists/"
 
 
 #-#-# Get the species lists #-#-#
-Good_mods <- read.csv(paste0(splistpath, "SDMs with high AUC all species.csv"))
+Good_mods <- read.csv(paste0(data_path, "SDMs with high AUC all species.csv"))
 Good_mods <- as.vector(Good_mods$Species)
 Trigger <- get(load(paste0(data_path,"IBA trigger species.Rdata")))
 
