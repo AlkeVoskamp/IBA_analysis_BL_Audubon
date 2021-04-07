@@ -1,8 +1,9 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#         Extract the range centroids and range extents         #
-#              Projected current and future ranges              #
-#                          October 2020                         #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                       IBA analysis Script 11                      #
+#           Extract the range centroids and range extents           #
+#                 Projected current and future ranges               #
+#                            September 2020                         #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
 #-#-# Clear memory #-#-#
@@ -16,23 +17,21 @@ library(snowfall)
 
 
 #-#-# Set file paths #-#-#
-matrix_path <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/BL_matrixes/"
-triggerpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/"
-splistpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/"
-areapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents/"
+matrix_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+datapath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Range_centroids_and_extents/"
 
 
 #-#-# Get trigger species lists #-#-#
-Good_mods <- read.csv(paste0(splistpath, "SDMs with high AUC all species.csv"))
+Good_mods <- read.csv(paste0(datapath, "SDMs with high AUC all species.csv"))
 Good_mods <- as.vector(Good_mods$Species)
-Trigger <- get(load(paste0(triggerpath,"IBA trigger species.Rdata")))
+Trigger <- get(load(paste0(datapath,"IBA trigger species.Rdata")))
 Trigger <- Trigger[Trigger %in% Good_mods]
 
 
 #-#-# Get the area in km2 per grid cell #-#-#
 ## The area per grid cell file was derived from the lat long coordinates using the raster package
-area <- read.csv(paste0(areapath,"Realm_coordinates_Lat_Lon_area.csv"))
+area <- read.csv(paste0(datapath,"Realm_coordinates_Lat_Lon_area.csv"))
 area <- area[c("x","y","km2")]
 
 
