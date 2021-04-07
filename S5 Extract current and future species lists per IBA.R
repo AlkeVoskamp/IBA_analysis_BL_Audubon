@@ -1,23 +1,24 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 5                      #
 #     List all species per PA for which the climate is suitable     #
-#          Currently and in future based on projections             #
-#         Simple overlay of PAs and projected suitability           #
+#           currently and in future based on projections            #
+#          Simple overlay of PAs and projected suitability          #
 #                             August 2016                           #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
 
 #-#-# Clear the memory #-#-#
 rm(list=ls(all=TRUE)) 
 
 
 #-#-# Set working directories #-#-#
-matrix_path <- "/home/avoskamp/BirdLife/Projected distributions/Revision/Matrixes/"
-data_path <- "/home/avoskamp/BirdLife/"
-outpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/IBA_occurrence_changes/"
-splistpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/"
+matrix_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+data_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_occurrence_changes/"
 
 
 #-#-# Get the species lists #-#-#
-Good_mods <- read.csv(paste0(splistpath, "SDMs with high AUC all species.csv"))
+Good_mods <- read.csv(paste0(data_path, "SDMs with high AUC all species.csv"))
 Good_mods <- as.vector(Good_mods$Species)
 Trigger <- get(load(paste0(data_path,"IBA trigger species.Rdata")))
 
