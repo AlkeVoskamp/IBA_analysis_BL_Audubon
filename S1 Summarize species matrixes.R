@@ -14,7 +14,7 @@ rm(list=ls())
 
 #-#-# Set the filepath and list the data files #-#-#
 predpath <- " "
-outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurence_matrixes"
 
 AllData <- list.files(predpath, pattern = "_GAM_")
 
