@@ -1,4 +1,5 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 9                      #
 #    Extract the number of IBAs with suitable climate per species   #
 #           Currently and in future based on projections            #
 #              Derived from the species lists per IBA               #
@@ -16,10 +17,10 @@ library(stringr)
 
 
 #-#-# Set working directories #-#-#
-occurrence_path <- "/home/avoskamp/BirdLife/Projected distributions/Revision/IBA_occurrence_changes/"
-matrix_path <- "/home/avoskamp/BirdLife/Projected distributions/Revision/Matrixes/"
-data_path <- "/home/avoskamp/BirdLife/"
-outpath <- "/home/avoskamp/BirdLife/Projected distributions/Revision/IBAs_suitable_per_species/"
+occurrence_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_occurrence_changes/"
+matrix_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+data_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBAs_suitable_per_species/"
 
 
 #-#-# Get the list of all species included in the analysis #-#-#
@@ -55,7 +56,6 @@ Get_names <- lapply(1:1653, function(p){
 })
 IBAlist <- do.call(rbind, Get_names)
 
-#files <- list.files(occurrence_path,pattern = "Yungas Inferiores de Isiboro-S?cure")
 
 #-#-# Extract the number of climatically suitable IBAs per species #-#-#
 sfInit(parallel=TRUE,cpus=ceiling(0.8*parallel::detectCores()))
