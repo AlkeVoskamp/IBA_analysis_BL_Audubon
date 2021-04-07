@@ -1,9 +1,11 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#       Changes in species occurrences across the       #
-#             IBA network South America                 #
-#            Percentage change per species              #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-## 968 trigger species 939 modelled and occuring in the included IBAs
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                       IBA analysis Script 11                      #
+#               Changes in species occurrences across the           #
+#                IBA network Central and South America              #
+#                    Percentage change per species                  #
+#                           November 2020                           #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
 
 #-#-# Clear memory #-#-#
 rm(list=ls(all=TRUE)) 
@@ -16,8 +18,8 @@ library(gridExtra)
 
 
 #-#-# Set the file paths #-#-#
-filepath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Species_occurrence_changes/"
-plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/"
+filepath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Species_occurrence_changes/"
+plotpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/"
 
 
 #-#-# Get the data #-#-#
@@ -28,10 +30,12 @@ OccChangeTable <- subset(Change_data, RCP == "rcp45") #Select rcp
 OccChangeTable <- subset(OccChangeTable, Thres == Threshold) #Select threshold
 nrow(OccChangeTable)
 
+
 #-#-# Calculate change #-#-#
 OccChangeTable$PropLeft <- OccChangeTable$Both/(OccChangeTable$Current/100)
 head(OccChangeTable)
 nrow(OccChangeTable)
+
 
 #-#-# Extract numbers for result section #-#-#
 ## Count species that remain in more than 50% of the IBAs they currently occur in
@@ -42,7 +46,6 @@ nrow(fiftyPercLeft)/(nrow(OccChangeTable)/100)
 ## Count species that do not occur in a IBA currently
 OccChangeTable <- subset(OccChangeTable,Current > 0)
 nrow(OccChangeTable)
-# 279 species are not currently occuring in a KBA off all species 85 of the trigger species
 
 ## Mean and median proportion left
 mean(na.omit(as.numeric(as.character(OccChangeTable$PropLeft))))
@@ -70,8 +73,8 @@ IBApSp <- ggplot(OccChangeTable, aes(x=as.numeric(as.character(PropLeft)))) +
 plot(IBApSp)
 
 
-#---#---#---#---# Second plot #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
-#-#-# Size of IBA vs proportion of species left #-#-#
+#---#---#---#---# Second plot - Size of IBA vs proportion of species left #---#---#---#---#---#---#---#---#---#
+
 #-#-# Load the IBA polygons and set to South American focal countries #-#-#
 countryList <- c("Argentina","Bolivia","Brazil","Chile","Colombia","Ecuador","French Guiana","Jamaica","Puerto Rico (to USA)",
                  "Guyana","Paraguay","Peru","Mexico","Uruguay","Venezuela","Belize","Costa Rica","Haiti","Cuba","Bahamas",
@@ -102,8 +105,8 @@ head(AreaData)
 
 #-#-# Calculate the proportion of species left per KBA #-#-#
 #-#-# Set data paths #-#-#
-plotpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/"
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_species_changes_lists/"
+plotpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/"
+datapath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
 
 
 #-#-# Load IBA change data and calculate proportion of IBAs left #-#-#
@@ -121,7 +124,8 @@ PlotData$Area <- as.numeric(as.character(PlotData$Area))
 head(PlotData)
 str(PlotData)
 
-## Scatterplot IBA area vs peoportion species remaining
+
+#-#-# Scatterplot IBA area vs peoportion species remaining #-#-#
 scatter <- ggplot(PlotData, aes(x=log(Area), y=PropLeft)) +
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
@@ -153,8 +157,8 @@ setwd(plotpath)
 ggsave("Fig S19 Percentage of IBAs left per species and IBA area RCP 45 trigger MaxKap habitat.tiff",CombPlot,width=12, height=4, unit="in", dpi=300, bg="transparent")
 
 
-#-#-# Extract summary numbers per manuscript (from ensemble files generated in script S7) #-#-#
-summarypath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_species_changes_lists/"
+#---#---#---# Extract summary numbers per manuscript (from ensemble files generated in script S7) #---#---#---#---#
+summarypath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_species_changes_lists/"
 Plot_files <- list.files(summarypath, pattern = "_Ensemble")
 Plot_file <- read.csv(paste0(summarypath,Plot_files[3]))
 head(Plot_file)
