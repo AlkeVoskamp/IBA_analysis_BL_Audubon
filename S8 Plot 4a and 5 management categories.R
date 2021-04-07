@@ -1,9 +1,10 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#             Plot the management category results            #
-#              Scatterplot emmigrants vs colonists            #
-#           Barchart management categories per country        #
-#                       September 2020                        #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 8                      #
+#                Plot the management category results               #
+#                Scatterplot emmigrants vs colonists                #
+#             Barchart management categories per country            #
+#                           September 2020                          #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
 #-#-# Clear memory #-#-#
@@ -31,9 +32,11 @@ g_legend<-function(a.gplot){
 }
 
 
-#-#-# Set the filepaths #-#-#
-File_path <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_management_classes/"
+#-#-# Set the filepaths and list the input files #-#-#
+File_path <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_management_classes/"
 Col_em_file <- list.files(File_path,pattern = "trigger_species_changes_Ensemble_rcp45_2050_MaxKap")
+
+Figurepath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/"
 
 
 #-#-# Load the plot data #-#-#
@@ -85,12 +88,13 @@ CombPlot <- arrangeGrob(scatter,legScat,
 plot(CombPlot)
 
 #-#-# Save the result plots #-#-#
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/")
+setwd(Figurepath)
 ggsave("Scatterplot_trigger_cat_RCP_45_50_MaxKap.jpeg",CombPlot,width=6, height=4, unit="in", dpi=600, bg="transparent")
 
 
-#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
-#-#-# Proportion per country plot #-#-#
+#---#---#---#---#---#---#---#---# Proportion per country plot #---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
+
+#-#-# Read in the relevant scenario file #-#-#
 mgt <- read.csv(paste0(File_path,"Management_classes_IBA_trigger_species_changes_Ensemble_rcp45_2050_MaxKap.csv"))
 
 mgt$Category <- 0
@@ -148,7 +152,6 @@ CountryMgt <- ggplot(PropTab, aes(fill=Category,colour=Category, y=Prop, x=count
  
 plot(CountryMgt)
 
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Main manuscript/")
-#setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Spp/")
+setwd(Figurepath)
 ggsave("Mgt proportion per country trigger RCP 45 MaxKap.jpeg",CountryMgt,width=14, height=6, unit="in", dpi=600, bg="transparent")
 
