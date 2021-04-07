@@ -1,10 +1,12 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                       IBA analysis Script 13                      #
 #            Calculate bearing between range centroids              #
 #               Current and future range centroids                  #
 #                          November 2017                            #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
+#-#-# Clear memory #-#-#
 rm(list=ls())
 
 
@@ -17,9 +19,8 @@ library(sp)
 
 
 #-#-# Bearing between range centroids #-#-#
-#setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/Result files/")
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Summarized_range centroids and extents/"
+datapath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Range_centroids_and_extents/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Summarized_range_centroids_and_extents/"
 
 
 #-#-# List files to extract mean coords per species #-#-#
@@ -84,9 +85,9 @@ Species_type  <- lapply(Species, function(s){
 })         
        
    
-#-#-# Get bearings #-#-#
+#---#---#---#---#---#---# Summarize the bearings #---#---#---#---#---#---#---#---#
 #-#-# Set filepaths #-#-#
-outpathII <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Bearings between range centroids/"
+outpathII <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Bearings_between_range_centroids/"
 
 
 #-#-# List output files summarized coordinates #-#-#
@@ -149,8 +150,7 @@ Get_bearing <- lapply(Coordfiles, function(x){
 
 
 #-#-# Extract overall directions for manuscript #-#-#
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Bearings between range centroids/")
-All_sum_files <- list.files()
+All_sum_files <- list.files(outpathII)
 
 ## Set to the right file for manuscript info and supplements
 CDdata <- read.csv(All_sum_files[8])
@@ -181,8 +181,8 @@ mean(CDdata$distance)
 sd(CDdata$distance)
 
 
-#-#-# Extract change in range extent for manuscript #-#-#
-Extpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents/"
+#---#---#---#---#---# Extract change in range extent for result section #---#---#---#---#---#
+Extpath <- datapath
 
 ## Select relevant files
 All_ex_files <- list.files(Extpath, pattern = "_rcp85_2050_MaxKap.csv")
