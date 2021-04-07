@@ -1,8 +1,10 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#        Calculate the adaptation management classes          #
-#     following the methods of Hole et al 2011 Cons Biol      #
-#                       September 2020                        #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 7                      #
+#            Calculate the adaptation management classes            #
+#         following the methods of Hole et al 2011 Cons Biol        #
+#                           September 2020                          #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+
 
 #-#-# Clear memory #-#-#
 rm(list=ls(all=TRUE)) 
@@ -16,8 +18,8 @@ library(data.table)
 
 
 #-#-# Set file paths #-#-#
-species_lists <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_species_changes_lists/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_management_classes/"
+species_lists <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_species_changes_lists/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_management_classes/"
 
 #-#-# List all scenarioes #-#-#
 All_scenarioes <- list.files(species_lists)
@@ -225,15 +227,23 @@ Calc_manag <- lapply(All_scenarioes, function(m){
 })
 
 
-#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
+#---#---#---#---#---#---#---#---# Get uncertainty around values for spatial maps #---#---#---#---#---#---#---#---#---#---#---#---#---#
 ## These are needed to plot the uncertainty around the allocated management class based on SDM and GCM types
-#-#-# Summarize the Mgt class information for ensembles #-#-# 
+
+#-#-# Select all files for one species type and one threshold #-#-# 
 Mgt_classes <- intersect(list.files(outpath, pattern = "IBA_trigger"), list.files(outpath, pattern = "_MaxKap.csv"))
 #Mgt_classes <- Mgt_classes[4:39]
 
-summarized_outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/IBA_management_classes_summarized/"
+
+#-#-# Set the filepath #-#-#
+summarized_outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/IBA_management_classes_summarized/"
+
+
+#-#-# List of the climate change scenarioes to loop through #-#-#
 RCPs <- c("rcp26", "rcp45", "rcp85")
 
+
+#-#-# Extract uncertainty around Mgt classes #-#-#
 Summarize <- lapply(RCPs, function(r){
   
   All_files <- grep(Mgt_classes, pattern = r)
