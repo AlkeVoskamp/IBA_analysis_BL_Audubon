@@ -1,17 +1,17 @@
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
-#            Summarize species richness values across           #
-#         all scenarioes from presence/absence matrixes         #
-#             Plot species richness values FIGURE 2             #
-#                          October 2020                         #
-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                        IBA analysis Script 2                      #
+#               Summarize species richness values across            #
+#            all scenarioes from presence/absence matrixes          #
+#                Plot species richness values FIGURE 2              #
+#                            October 2020                           #
+#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
 #-#-# Clear memory #-#-#
 rm(list=ls())
 
 
-#-#-# Load libraries
-#library(fields)
+#-#-# Load libraries #-#-#
 library(RColorBrewer)
 library(colorRamps)
 library(ggplot2)
@@ -23,10 +23,9 @@ library(tidyverse)
 
 
 #-#-# Set filepaths #-#-#
-matrixpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/BL_matrixes/"
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Data/"
-splistpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Plot_files/SR_matrixes/"
+matrixpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+datapath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
 
 
 #-#-# Proccess the input data - summarizing species matrixes into SR dataframes #-#-#
@@ -34,7 +33,7 @@ All_matrixes <- list.files(matrixpath, pattern = "_MaxKap.RData")
 
 
 #-#-# Get the species lists #-#-#
-Good_mods <- read.csv(paste0(splistpath, "SDMs with high AUC all species.csv"))
+Good_mods <- read.csv(paste0(datapath, "SDMs with high AUC all species.csv"))
 Good_mods <- as.vector(Good_mods$Species)
 Trigger <- get(load(paste0(datapath,"IBA trigger species.Rdata")))
 
@@ -62,7 +61,7 @@ GetSR <- lapply(All_matrixes,function(s){
   Base.names <- do.call(rbind,basenames)
   Base.names <- Base.names[(Base.names %in% Good_mods)] 
 
-  ## Subset by trigger species if needed
+  ## Subset by trigger species if needed (for plots that only show changes for species of conservation concern)
   # Trigger.names <- Base.names[(Base.names %in% Trigger)]
   # Trigger_model <- lapply(Trigger.names, function(x){ #Change here for trigger or all species
   #   Trigger_name <- paste0(x, "_", Model)
@@ -89,16 +88,16 @@ GetSR <- lapply(All_matrixes,function(s){
 SR_matrix <- Reduce(function(...) merge(..., all=T), GetSR)
 head(SR_matrix)
 
-write.csv(SR_matrix, file = paste0(matrixpath, "Species_richness_all_MaxKap.csv"))
+write.csv(SR_matrix, file = paste0(outpath, "Species_richness_all_MaxKap.csv"))
 
 
-#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#---#
+#---#---#---#---#---#---#---# Plot species richness figures #---#---#---#---#---#---#---#---#---#---#
 
+## To use this plotting code the x y SR datatables created in the first part of the code are needed
 
-#-#-# Plot species richness figures #-#-#
 #-#-# Set filepaths #-#-#
-SRpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/Plot_files/SR_matrixes/"
-
+SRpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Occurrence_matrixes"
+Figurepath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/"
 
 #-#-# TSS plots #-#-#
 #-#-# Read matrixes back in for plotting #-#-#
@@ -287,7 +286,7 @@ Comb_plot<- arrangeGrob(Comb_map,Comb_hist,
                          nrow = 2)
 plot(Comb_plot)
 
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/")
+setwd(Figurepath)
 ggsave("Fig S7 Species richness trigger TSS RCP 45.jpeg",Comb_plot,width=8, height=6, unit="in", dpi=600, bg="transparent")
 
 
@@ -481,6 +480,6 @@ Comb_plot<- arrangeGrob(Comb_map,Comb_hist,
                         nrow = 2)
 plot(Comb_plot)
 
-setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/IBA_analysis_BL_Audubon/Main_manuscript_plots_final/")
+setwd(Figurepath)
 ggsave("Fig 2 Species richness trigger MaxKap RCP 45.jpeg",Comb_plot,width=8, height=6, unit="in", dpi=600, bg="transparent")
 
