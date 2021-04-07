@@ -1,10 +1,12 @@
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
+#                       IBA analysis Script 14                      #
 #               Calculate range extent and overlap                  #
 #               Current and future range centroids                  #
 #                          November 2017                            #
 #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
 
+#-#-# Clear memory #-#-#
 rm(list=ls())
 
 
@@ -17,9 +19,8 @@ library(sp)
 
 
 #-#-# Bearing between range centroids #-#-#
-#setwd("/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Data/Result files/")
-datapath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Range centroids and extents trig/"
-outpath <- "/Users/alkevoskamp/Documents/BirdLife/South America manuscript/Revision/Data/Summarized range extent/"
+datapath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Summarized_range_centroids_and_extents/"
+outpath <- "https://github.com/AlkeVoskamp/IBA_analysis_BL_Audubon/Data/Summarized range extent/"
 
 
 #-#-# List files to extract mean coords per species #-#-#
