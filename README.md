@@ -1,2 +1,2 @@
 # IBA_analysis_BL_Audubon
-Analysis output of terrestrial bird SDMs to evaluate future IBA coverage 
+R codes needed to analyse the output of the species distribution models and evaluate changes in protection coverage. Uses species occurrence matrix as input.
